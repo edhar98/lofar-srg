@@ -13,18 +13,8 @@ SOURCE_LOTSS = "LoTSS download"
 SOURCE_UPLOAD = "Upload FITS"
 MODE_KEEP = "Keep painted region (paint over the source)"
 MODE_REMOVE = "Remove painted regions (paint over contaminants)"
-_ensemble: L.Ensemble | None = None
-
-
-def get_ensemble() -> L.Ensemble:
-    global _ensemble
-    if _ensemble is None:
-        try:
-            _ensemble = L.Ensemble()
-        except FileNotFoundError:
-            L.download_models()
-            _ensemble = L.Ensemble()
-    return _ensemble
+L.download_models()
+ENSEMBLE = L.Ensemble(verify=False)
 
 
 def display(image: np.ndarray, overlay: np.ndarray | None = None) -> np.ndarray:
@@ -78,7 +68,7 @@ def run_model(editor: dict | None, image: np.ndarray | None, mode: str, auto: bo
         remove = compact if remove is None else remove | compact
     try:
         model_input = L.preprocess(image=image, keep=keep, remove=remove)
-        result = get_ensemble().predict(images=model_input[None])[0]
+        result = ENSEMBLE.predict(images=model_input[None])[0]
     except Exception as exc:
         raise gr.Error(str(exc)) from exc
     replaced = L.excluded(shape=image.shape, keep=keep, remove=remove)

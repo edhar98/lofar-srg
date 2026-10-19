@@ -7,6 +7,7 @@ import hashlib
 import io
 import json
 import os
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import numpy as np
@@ -171,11 +172,11 @@ def download_models(*, model_dir: Path = MODEL_DIR) -> None:
     if not record:
         raise RuntimeError(f"No zenodo_record in {MANIFEST}; place the ONNX files in {model_dir} manually")
     model_dir.mkdir(parents=True, exist_ok=True)
-    for member in manifest["members"]:
+    for i, member in enumerate(manifest["members"], start=1):
         target = model_dir / member["file"]
         if target.exists() and _sha256(target) == member["sha256"]:
             continue
-        print(f"Downloading {member['file']}")
+        print(f"Downloading model {i}/{len(manifest['members'])}: {member['file']}", flush=True)
         partial = target.with_suffix(".part")
         with requests.get(f"https://zenodo.org/records/{record}/files/{member['file']}?download=1",
                           stream=True, timeout=300) as response:
@@ -201,14 +202,18 @@ class Ensemble:
             bad = [m["file"] for m, p in zip(members, paths) if _sha256(p) != m["sha256"]]
             if bad:
                 raise ValueError(f"Checksum mismatch: {bad}")
-        self.sessions = [ort.InferenceSession(str(p), providers=["CPUExecutionProvider"]) for p in paths]
+        options = ort.SessionOptions()
+        options.intra_op_num_threads = 1
+        self.sessions = [ort.InferenceSession(str(p), options, providers=["CPUExecutionProvider"]) for p in paths]
+        self.pool = ThreadPoolExecutor(max_workers=min(8, os.cpu_count() or 1))
 
     def predict(self, *, images: np.ndarray) -> list[dict]:
         """images: uint8 array (N, 128, 128) from `preprocess`."""
         if images.ndim != 3 or images.shape[1:] != (IMAGE_SIZE, IMAGE_SIZE) or images.dtype != np.uint8:
             raise ValueError("Expected uint8 images of shape (N, 128, 128)")
         tensors = (images.astype(np.float32) / 255.0)[:, None]
-        logits = np.stack([np.atleast_2d(s.run(None, {"input": tensors})[0]) for s in self.sessions])
+        logits = np.stack(list(self.pool.map(lambda s: np.atleast_2d(s.run(None, {"input": tensors})[0]),
+                                             self.sessions)))
         logits = logits.astype(np.float64)
         probs = np.exp(logits - logits.max(axis=2, keepdims=True))
         probs /= probs.sum(axis=2, keepdims=True)
