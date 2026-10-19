@@ -1,0 +1,34 @@
+\begingroup
+\setstretch{1.1}
+\section{Supplementary evaluation}
+\label{app:evaluation}
+
+The test-set counts in Table~\ref{tab:heldout_counts} use the same ensemble as the main catalogue. Each reference class contains three test sources; the source-level predictions and full confusion matrix are retained with the accompanying analysis outputs.
+
+\begin{table}[H]
+\centering
+\small
+\setstretch{1}
+\input{tables/assessment/test_counts.tex}
+\caption[Test-set classification counts]{Predictions for the \(33\) test sources.}
+\label{tab:heldout_counts}
+\end{table}
+
+The \(F_1\) uncertainties in the main comparison tables and Table~\ref{tab:las_sensitivity} use source-level bootstrap resampling: for each catalogue separately, we repeatedly draw samples of the original size, allowing a source to be selected more than once. Each selected source retains its reference label and saved model prediction, and we recalculate \(F_1\) for each sample without retraining the model. The central \(95\,\%\) of the resulting \(F_1\) values defines the reported uncertainty interval.
+
+Signed uncertainties give the distances from each estimate to its lower and upper \(95\,\%\) interval bounds. They describe sampling variation within the selected samples, excluding uncertainty in reference labels, source selection and training. FRII includes both internal FRII classes, as in the main comparisons.
+
+\begin{table}[H]
+\centering
+\small
+\setstretch{1}
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.6}
+\input{tables/assessment/las_intervals.tex}
+\caption[Angular-size sensitivity of external correspondence]{Curated-excluded comparisons by LAS, with \(95\,\%\) bootstrap intervals. Bins include their lower edge; the final bin includes \(1000''\).}
+\label{tab:las_sensitivity}
+\end{table}
+
+Removing Clews's uncertain FR labels as well as all curated sources preserves the stronger FRII correspondence. This checks sensitivity to reference selection without resolving the remaining mapping ambiguities.
+\par
+\endgroup

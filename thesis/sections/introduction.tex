@@ -1,0 +1,28 @@
+\section{Introduction}
+\label{sec:intro}
+
+Modern wide-area radio surveys such as the LOFAR Two-metre Sky Survey (LoTSS) are producing millions of radio sources with diverse morphologies. Visual classification of objects at this scale is time-consuming and does not provide a scalable approach to the analysis of source morphology~\citep{Nicolas2025}.
+
+Radio morphology reveals the activity of the central active galactic nucleus (AGN), the propagation of its jets, and their interaction with the surrounding medium, thereby providing information about nuclear activity, the central engine, and the source environment~\citep{Nicolas2025,Horton2025}.
+The observed structures are diverse, and apparently similar extended emission can arise from radio galaxies or from physically distinct diffuse cluster sources~\citep{vanWeeren2019}.
+A scalable analysis must therefore capture morphological diversity while recognising that visual similarity alone does not determine physical source identity.
+
+Supervised machine learning (ML) approaches require labelled training samples, but available labels cover only part of this diversity and may follow incompatible classification schemes~\citep{Nicolas2025}.
+Self-supervised learning (SSL) instead derives representations from unlabelled images and can organise radio sources according to morphological structure. \citet{Nicolas2025} applied this approach to smaller resolved sources in the second data release (LoTSS-DR2) with largest angular sizes (LAS) in the range $30'' < \mathrm{LAS} < 60''$, leaving the larger resolved-source regime unexplored.
+
+In this thesis, we address that gap by extending the morphology-learning framework of \citet{Nicolas2025} to \(32\,514\) LoTSS-DR2 sources with \(60'' \leq \mathrm{LAS} \leq 1000''\).
+Its primary result is an 11-class catalogue that records an ensemble morphology assignment and uncertainty summaries for every selected source.
+The central methodological contribution of the thesis is the \textit{similarity-to-radio-galaxy} score $S_\mathrm{RG}$,
+which is proposed as an uncertainty-aware way to prioritise sources whose image morphology differs from the radio-galaxy-like classes learned by the model.
+
+The resulting morphology classes are evaluated through comparison with three independent catalogues.
+The analysis describes the behaviour of $S_\mathrm{RG}$.
+The relic application illustrates this behaviour on selected radio relics but is not interpreted as evidence of physical source classification.
+
+We ask which morphology groups emerge in this sample, how their predictions correspond to internal and external labels, and how the proposed score responds to uncertainty and diffuse emission.
+
+The encoder, contrastive framework, structural-view augmentation and classifier pipeline come from \citet{Nicolas2025}. Our contributions are the adapted selection and training configuration, curated taxonomy, similarity score, catalogue comparisons and masked-relic study, supported by the polygon interface and analysis tools.
+
+The remainder of the document is organised as follows.
+Chapter~\ref{sec:background} reviews the LOFAR survey context, radio-galaxy taxonomy, contrastive SSL, and ensemble uncertainty quantification. Chapter~\ref{sec:data} describes the LoTSS-DR2 source selection and cutout preprocessing. Chapter~\ref{sec:method} details the pre-training, cluster-based label construction, supervised ensemble, and definition of \(S_\mathrm{RG}\).
+Chapter~\ref{sec:results} presents the catalogue and score distributions, alignment with three external catalogues, and the provisional relic test. Chapters~\ref{sec:discussion} and~\ref{sec:conclusion} interpret the supported results, delimit the score's use, and give an outlook.

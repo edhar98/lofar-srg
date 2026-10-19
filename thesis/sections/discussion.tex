@@ -1,0 +1,72 @@
+\section{Discussion}
+\label{sec:discussion}
+
+In this chapter we discuss the model's morphological strengths and weaknesses, the use of its similarity score, and the main limits of the analysis.
+
+\subsection{Morphological classification and external correspondence}
+\label{sec:discussion_catalogue}
+\label{sec:discussion_external}
+
+By extending the approach of \citet{Nicolas2025}, we obtained a catalogue of \(32\,514\) sources with \(60''\leq\mathrm{LAS}\leq1000''\). Its eleven classes provide a common morphological description for selecting and inspecting this extended-source sample.
+
+\citet{Nicolas2025} classified \(42\,230\) sources with LAS between \(30''\) and \(60''\) into twelve classes. We retain their host-centred image preparation and learning framework, while adopting a larger-angular-size sample and an eleven-class curation. The changed population and taxonomy prevent a direct comparison of classification performance.
+
+We find stronger FRII than FRI correspondence against Clews and Horton, while performance is similar for the two classes against Chilufya (Tables~\ref{tab:ext_fri} and~\ref{tab:ext_frii}). These comparisons treat Edge-bright FRII and Large FRII as a single morphological family.
+
+Frequent Bright-core assignments among reference FRI sources suggest that central brightness outweighs faint jets and lobes in the learned classification. Structured-Bent assignments suggest sensitivity to curvature, which some reference schemes include within FRI. Reference FRII sources assigned to Structured-Bent or Hybrid likewise suggest difficulty separating edge brightening from curvature and mixed structure (Figures~\ref{fig:ext_fn_fri} and~\ref{fig:ext_fn_frii}). 
+
+The reference catalogues differ in source selection, classification method and available imaging \citep{Clews2025,Horton2025,Chilufya2025}. Similar FRI and FRII disagreements persist among the \(149\) sources whose mapped labels agree across all three catalogues, identifying cases that merit closer inspection (Sec.~\ref{sec:ext_consensus}). Most sources with fine-class disagreements receive a radio-galaxy-like label, although these labels also dominate the reference samples (Table~\ref{tab:ext_group_retention}).
+
+Image preparation offers possible explanations for some disagreements: 
+\begingroup
+\setstretch{1.0}
+\begin{itemize}[itemsep=2pt, parsep=0pt, topsep=3pt]
+\item resampling cutouts to \(128\times128\) pixels can blur small features;
+\item clipping can suppress faint emission, while linear intensity scaling leaves faint features weak relative to bright components;
+\item neighbouring sources and host centring can also affect the structure presented to the model.
+\end{itemize}
+\endgroup
+Thus, Bright-core and Core-Displaced assignments require inspection of the original radio field and host information for physical interpretation.
+
+Unlike \citet{Nicolas2025}, we omitted active-pixel selection because it would substantially reduce the sample.
+It could also exclude diffuse or extended sources, including some Large FRII sources, if too few pixels exceed the intensity threshold.
+
+Visual cluster consolidation and SI-SSIM filtering help define the class boundaries (Sec.~\ref{sec:method_labels}). Their outcome depends on how carefully clusters are grouped into morphologically coherent classes and which examples are retained.
+
+\subsection{Similarity scoring and diffuse-emission applications}
+\label{sec:discussion_score}
+\label{sec:discussion_relics}
+
+The similarity score introduced here adds a filtering layer to the morphology catalogue by combining support for radio-galaxy-like (\(G\)) classes with ensemble reliability.
+Its proposed use is to prioritise sources for inspection within the fitted model and adopted preprocessing.
+
+The model already assigns \(92.5\,\%\) of the full sample to \(G\), so frequent \(G\) assignments among external disagreements are mainly a descriptive result.
+
+In the mapped-reference sample, sources assigned to the non-target group \(N\) favour low \(P_\mathrm{RG}\) and remain below \(S_\mathrm{RG}=0.25\), including cases with high reliability (Figure~\ref{fig:ext_srg_distributions}). Within \(G\), reliability separates concentrated, consistent predictions from weaker support. Examining \(P_\mathrm{RG}\) and \(R\) separately shows which factor reduces the score. 
+
+We should note that the score bands depend on the fitted model and the adopted \(G/N\) definitions. Independent review is needed to establish their selection quality and any improvement over \(P_\mathrm{RG}\) alone.
+
+The ten selected relics receive seven morphology labels, illustrating how diffuse arcs and ridges can resemble structures learned from radio galaxies (Table~\ref{tab:relics}). All fall in the transitional or low-score bands, despite several having large \(P_\mathrm{RG}\). These results show that morphological resemblance can extend across physically different source populations.
+
+Manual masking is important for isolating relic emission, while clipping and rescaling determine which features remain visible. The conclusions therefore apply to these deliberately prepared examples. Automated identification of radio relics or other diffuse emission in unmasked survey fields lies beyond this work's scope.
+
+The polygon also changes the pixels used to estimate the clipping threshold, coupling source isolation to intensity preprocessing. P113 N lies just below the high-score boundary; its band assignment should therefore be tested against reasonable changes in masking and clipping.
+
+\subsection{Limitations and implications for future work}
+\label{sec:discussion_validation}
+
+One limitation of the pipeline is its dependence on the source associations, host coordinates and angular sizes supplied by the value-added catalogue.
+Errors in these quantities can affect sample membership, cutout centring and the extent of emission included in the model input.
+Applying the pipeline to another survey requires equivalent source associations, host positions and angular-size estimates.
+
+Another bottleneck of the framework is manual curation, which is time-consuming and depends on the analyst's judgement.
+Reproducibility requires preserving the original cluster memberships, cluster-to-class mapping and filtering choices; in Appendix~\ref{app:hdbscan_cluster_overview} we record the grouping used in this work. Independent repeat curation would test the stability of the class boundaries.
+
+The validation and test sets used for fine-tuning contain only \(22\) and \(33\) sources, making performance estimates for individual classes uncertain.
+Their selection from the curated sample also favours the morphologies retained by the filtering procedure.
+External comparisons use independently assigned reference labels, although some compared sources were used for classifier training (Sec.~\ref{sec:results_external}).
+
+The main evaluation priority is an independently reviewed sample covering all classes, score bands and angular sizes. Testing on additional sky fields would assess transfer beyond the population used for pre-training.
+
+Agreement also varies with angular size: against Horton, FRI recovery is weakest among the smallest sources (Table~\ref{tab:las_sensitivity}). Under the adopted resampling, a \(6''\) beam spans approximately \(512/\mathrm{LAS}\) pixels, with LAS expressed in arcseconds, decreasing from \(8.53\) to \(0.512\) pixels across the sample's size range and limiting the preservation of small-scale structure in the largest sources. Since morphology and resolution vary together, controlled tests of intensity scaling, source isolation and angular-size dependence would help distinguish their contributions to the observed disagreements, as outlined in Chapter~\ref{sec:conclusion}.
+

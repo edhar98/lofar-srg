@@ -1,0 +1,218 @@
+\documentclass[11pt,twoside]{article}
+\usepackage{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{pdflscape}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{setspace}
+\usepackage{needspace}
+\usepackage{iftex}
+\usepackage{comment}
+\usepackage[authoryear]{natbib}
+\setcitestyle{authoryear,round,semicolon}
+\ifPDFTeX
+\renewcommand{\familydefault}{\sfdefault}
+\else
+\usepackage{fontspec}
+\setmainfont{DejaVu Serif}
+\fi
+\usepackage{fancyhdr}
+% Load after float, setspace and natbib so their anchors are patched correctly.
+\usepackage{hyperref}
+\geometry{
+	paper=a4paper,
+	top=3cm,
+	bottom=2cm,
+	inner=2.5cm,
+	outer=2cm,
+	headheight=15pt,
+	footskip=1cm,
+	headsep=0.7cm,
+}
+\hypersetup{colorlinks=true,linkcolor=black,citecolor=black,urlcolor=black,pdfpagelayout=TwoPageRight}
+\onehalfspacing
+\numberwithin{equation}{section}
+
+\definecolor{aicolor}{HTML}{6E2A8C}
+\ifdefined\hideai
+  \long\def\ai#1{}
+\else
+  \long\def\ai#1{{\color{aicolor}#1}}
+\fi
+
+\providecommand{\mnras}{MNRAS}
+\providecommand{\aap}{A\&A}
+\providecommand{\aapr}{A\&A Rev.}
+\providecommand{\apj}{ApJ}
+\providecommand{\apjs}{ApJS}
+\providecommand{\apjl}{ApJ}
+\providecommand{\araa}{ARA\&A}
+\providecommand{\nat}{Nature}
+\providecommand{\physrep}{Phys. Rep.}
+\providecommand{\ssr}{Space Sci. Rev.}
+
+% Metadata macros
+\newcommand{\Class}{Bachelor's Thesis}
+\newcommand{\Title}{Classification and Similarity Scoring of Extended LOFAR Radio Sources via Self-Supervised Learning}
+\newcommand{\assignmentGroup}{}
+\newcommand{\SubmissionDate}{September 2026}
+\newcommand{\AuthorName}{Edgar Harutyunyan}
+\newcommand{\AuthorNumber}{3775171}
+\newcommand{\FacultyName}{FAKULTÄT FÜR PHYSIK\\UND GEOWISSENSCHAFTEN}
+\newcommand{\Supervisor}{\href{https://www.tls-tautenburg.de/de/staff/prof-dr-matthias-hoeft}{Prof. Dr. Matthias Hoeft}}
+\newcommand{\SecondSupervisor}{\href{https://www.physik.uni-hamburg.de/en/hs/group---brueggen/team-members/baron-nicolas.html}{M.Sc. Nicolas Baron Perez}}
+
+\pagestyle{fancy}
+\author{
+    {\Large Submitted by:}\\[8pt]
+    {\LARGE\AuthorName}\\[4pt]
+    {\large\AuthorNumber}\\[1.5cm]
+    {\Large Supervisors:}\\[8pt]
+    {\Large\Supervisor}\\[4pt]
+    {\Large\SecondSupervisor}
+}
+\date{}
+\title{\vspace{0.15\textheight}{\huge\bfseries\Title\par}
+  \vspace{1.1cm}{\LARGE\Class\par}\vspace{0.6cm}}
+
+\fancypagestyle{firstpage}{
+    \setlength{\headwidth}{\textwidth}
+    \fancyhf{}
+    \fancyhead[C]{%
+      \begin{minipage}[c][3cm][c]{0.46\textwidth}
+        \includegraphics[height=3cm]{branding/uni_leipzig_black.pdf}%
+      \end{minipage}%
+      \begin{minipage}[c][3cm][c]{0.54\textwidth}
+        \raggedleft\sffamily\LARGE\FacultyName
+      \end{minipage}%
+    }
+    \fancyfoot[C]{\Large\SubmissionDate}
+    \renewcommand\headrulewidth{0pt}
+}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO]{\setstretch{1}\small\itshape\nouppercase{\leftmark}}
+\fancyhead[LE]{\setstretch{1}\small\itshape\nouppercase{\rightmark}}
+\fancyfoot[LE,RO]{\small\thepage}
+\renewcommand\headrulewidth{0.4pt}
+\fancypagestyle{plain}{
+    \fancyhf{}
+    \fancyfoot[LE,RO]{\small\thepage}
+    \renewcommand\headrulewidth{0pt}
+}
+\newcommand{\runningchaptername}{Chapter}
+\renewcommand{\sectionmark}[1]{\markboth{\runningchaptername\ \thesection. #1}{}}
+\renewcommand{\subsectionmark}[1]{\markright{\thesubsection. #1}}
+\AddToHook{cmd/appendix/after}{\renewcommand{\runningchaptername}{Appendix}}
+\makeatletter
+\newcommand{\thesis@standardsection}{%
+  \@startsection{section}{1}{\z@}%
+    {-3.5ex \@plus -1ex \@minus -.2ex}%
+    {2.3ex \@plus .2ex}%
+    {\normalfont\LARGE\bfseries\raggedright}}
+\newcommand{\section@cntformat}{}
+\renewcommand{\@seccntformat}[1]{%
+  \ifcsname #1@cntformat\endcsname
+    \csname #1@cntformat\endcsname
+  \else
+    \csname the#1\endcsname\quad
+  \fi}
+\newcommand{\thesis@chaptertitle}[1]{%
+  \normalfont\LARGE\bfseries\runningchaptername\ \thesection.\ #1}
+\newcommand{\thesis@chaptersection}[2][]{%
+  \if\relax\detokenize{#1}\relax
+    \thesis@standardsection[#2]{\thesis@chaptertitle{#2}}%
+  \else
+    \thesis@standardsection[#1]{\thesis@chaptertitle{#2}}%
+  \fi}
+\renewcommand{\section}{%
+  \@ifstar{\thesis@standardsection*}{\thesis@chaptersection}}
+\makeatother
+\AddToHook{cmd/section/before}{\thispagestyle{plain}}
+\raggedbottom
+
+% Finish pending floats, then insert an empty verso if needed.
+\newcommand{\cleartooddpage}{%
+  \clearpage
+  \begingroup
+    \pagestyle{empty}%
+    \cleardoublepage
+  \endgroup}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\pagenumbering{gobble}
+\newgeometry{top=4cm,bottom=2cm,left=2.5cm,right=2.5cm,
+  headheight=3cm,headsep=0.2cm,footskip=1cm}
+\maketitle
+\thispagestyle{firstpage}
+\clearpage
+\thispagestyle{empty}
+\null
+\clearpage
+\restoregeometry
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\markboth{Declaration of Authorship}{}
+\input{sections/declaration.tex}
+\clearpage
+\markboth{Acknowledgements}{}
+\input{sections/acknowledgements.tex}
+\clearpage
+\markboth{Abstract}{}
+\input{sections/abstract.tex}
+\clearpage
+\tableofcontents
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{\listfigurename}
+\listoffigures
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{\listtablename}
+\listoftables
+\clearpage
+\begingroup
+\pagestyle{empty}
+\cleardoublepage
+\endgroup
+\pagenumbering{arabic}
+
+\input{sections/introduction.tex}
+\cleartooddpage
+\input{sections/background.tex}
+\cleartooddpage
+\input{sections/data.tex}
+\cleartooddpage
+\input{sections/methodology.tex}
+
+\cleartooddpage
+\input{sections/results.tex}
+
+\cleartooddpage
+\input{sections/discussion.tex}
+\cleartooddpage
+\input{sections/conclusion.tex}
+
+\cleartooddpage
+\appendix
+\input{sections/appendix_architecture.tex}
+
+\clearpage
+\input{sections/appendix_external_galleries.tex}
+
+\clearpage
+\input{sections/appendix_evaluation.tex}
+
+\cleartooddpage
+\phantomsection
+\addcontentsline{toc}{section}{\refname}
+\providecommand{\eprint}[2][]{\href{https://arxiv.org/abs/#2}{arXiv:#2}}
+\bibliographystyle{aa}
+\bibliography{references}
+\end{document}

@@ -1,0 +1,35 @@
+\section{Conclusion and Outlook}
+\label{sec:conclusion}
+
+\subsection{Main conclusions}
+
+\begingroup
+\emergencystretch=2em
+We produced an eleven-class catalogue of \(32\,514\) extended LoTSS-DR2 sources using the adapted framework of \citet{Nicolas2025}. Self-supervised pre-training, cluster curation and a \(50\)-member ensemble provide morphology assignments and uncertainty summaries.
+\par
+\endgroup
+
+FRII correspondence is stronger than FRI correspondence against Clews and Horton, while the two are similar against Chilufya. FRI recovery remains weak, identifying an important limitation of the learned classification (Sec.~\ref{sec:results_external}).
+
+The inspection score \(S_\mathrm{RG}\) combines radio-galaxy-like probability mass with ensemble reliability, distinguishing broad morphological support from concentrated and consistent predictions. Classes, score components and cutouts should be inspected together.
+
+Among ten selected, masked relics, none reaches the high-score boundary.
+Their varied morphology assignments illustrate the model's response to deliberately isolated diffuse emission.
+
+\subsection{Future work}
+
+Independent review across classes and score bands should assess the quality of score-based selections and probability calibration against observed correctness \citep{Guo2017}. It should include sources outside the curated sample.
+
+PyBDSF catalogue positions and fitted sizes offer a possible route to applying the pipeline without host identifications. \citet[Sec.~2]{Nicolas2026} centre DR3 cutouts on radio mean positions and use a side length of \(2.5\times\mathrm{Maj}\), where \(\mathrm{Maj}\) is the fitted Gaussian major axis. 
+Comparing these radio-centred inputs with our host-centred cutouts would test the sensitivity to source association, centring and size estimates.
+
+Controlled retraining should compare intensity scaling and automatic source isolation on a fixed, independently reviewed sample. LAS-stratified performance would inform size-specific modelling, accounting for the smaller samples at large angular sizes.
+
+Synthetic core-and-lobe images could also test sensitivity to central brightness, bending and faint extended emission, following the pre-training evaluation of \citet{Nicolas2025}. Any resulting training changes should be assessed on real sources, particularly reference FRI examples.
+
+A broader relic sample with controlled masking and clipping variants would test how input preparation affects the predictions. Including unmasked fields, radio haloes and revived fossil plasma would extend the assessment to more varied diffuse-emission environments \citep{vanWeeren2019}.
+
+\subsection{Data and software availability}
+\label{sec:availability}
+
+The final source catalogue, trained classification model and author-developed analysis tools, including the polygon-masking interface, are available upon request; the inherited learning framework is credited separately in Chapter~\ref{sec:intro}. Requests can be directed to \href{mailto:harutyunianedgar@gmail.com}{\nolinkurl{harutyunianedgar@gmail.com}}.
