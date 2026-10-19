@@ -1,5 +1,7 @@
 # LoTSS radio-galaxy similarity score (S_RG)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23468547.svg)](https://doi.org/10.5281/zenodo.23468547)
+
 Bachelor's thesis *Classification and Similarity Scoring of Extended LOFAR Radio Sources via
 Self-Supervised Learning* (Edgar Harutyunyan, Universität Leipzig, September 2026), the resulting
 morphology catalogue of 32 514 LoTSS-DR2 sources, and a tool that classifies your own cutouts with
@@ -13,7 +15,7 @@ the same 50-member ensemble.
 | `CLASSES.md` | The 11 morphology classes |
 | `lofar_srg.py` | Cutout download, preprocessing, masking, ensemble inference (library + CLI) |
 | `app.py` | Browser interface for the same steps |
-| `ensemble_manifest.json` | File names, SHA-256 checksums and Zenodo record of the 50 ONNX models |
+| `ensemble_manifest.json` | File names, SHA-256 checksums and Zenodo record of the 50 ONNX models ([10.5281/zenodo.23468547](https://doi.org/10.5281/zenodo.23468547)) |
 
 ## Install
 
